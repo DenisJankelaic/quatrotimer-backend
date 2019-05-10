@@ -1,5 +1,12 @@
 FROM node:12.2.0-alpine
 
+
+ARG SECRET
+ARG MONGO_URL
+
+ENV SECRET=$SECRET
+ENV MONGO_URL=$MONGO_URL
+
 RUN apk update
 
 WORKDIR /app
