@@ -12,7 +12,6 @@ import {
 } from "../shared/contracts";
 
 const User = mongoose.model("users", UserSchema);
-const config = require("../shared/config").get(process.env.NODE_ENV);
 
 export class AuthenticationController {
   public loggingIn = async (
@@ -41,7 +40,7 @@ export class AuthenticationController {
 
   private createToken(user: UpdateUser): TokenData {
     const expiresIn = 60 * 60; // an hour
-    const secret = config.SECRET;
+    const secret = process.env.SECRET;
     const dataStoredInToken: DataStoredInToken = {
       _id: user._id
     };

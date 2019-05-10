@@ -40,7 +40,6 @@ var jwt = require("jsonwebtoken");
 var mongoose = require("mongoose");
 var user_data_model_1 = require("../models/user-data-model");
 var User = mongoose.model("users", user_data_model_1.UserSchema);
-var config = require("../shared/config").get(process.env.NODE_ENV);
 var AuthenticationController = /** @class */ (function () {
     function AuthenticationController() {
         var _this = this;
@@ -76,7 +75,7 @@ var AuthenticationController = /** @class */ (function () {
     }
     AuthenticationController.prototype.createToken = function (user) {
         var expiresIn = 60 * 60; // an hour
-        var secret = config.SECRET;
+        var secret = process.env.SECRET;
         var dataStoredInToken = {
             _id: user._id
         };

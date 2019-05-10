@@ -4,8 +4,8 @@ var express = require("express");
 var bodyParser = require("body-parser");
 var mongoose = require("mongoose");
 var cors = require("cors");
+require("dotenv").config();
 var routes_1 = require("./routes/routes");
-var db_url_1 = require("./shared/db-url");
 var App = /** @class */ (function () {
     function App() {
         this.routePrv = new routes_1.Routes();
@@ -17,7 +17,7 @@ var App = /** @class */ (function () {
     App.prototype.mongoSetup = function () {
         mongoose.Promise = global.Promise;
         mongoose
-            .connect(db_url_1.mongoUrl, { useNewUrlParser: true })
+            .connect(process.env.MONGO_URL, { useNewUrlParser: true })
             .then(function () { return console.log("Connected to MongoDB."); })
             .catch(function (err) {
             throw err;

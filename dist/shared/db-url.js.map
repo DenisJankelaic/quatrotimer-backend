@@ -1,1 +1,1 @@
-{"version":3,"file":"db-url.js","sourceRoot":"","sources":["../../app/lib/shared/db-url.ts"],"names":[],"mappings":";;AAAa,QAAA,QAAQ,GAAG,yEAAyE,CAAC"}
+{"version":3,"file":"db-url.js","sourceRoot":"","sources":["../../app/shared/db-url.ts"],"names":[],"mappings":";;AAAa,QAAA,QAAQ,GAAG,yEAAyE,CAAC"}

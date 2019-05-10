@@ -3,8 +3,9 @@ import * as bodyParser from "body-parser";
 import * as mongoose from "mongoose";
 import * as cors from "cors";
 
+require("dotenv").config();
+
 import { Routes } from "./routes/routes";
-import { mongoUrl } from "./shared/db-url";
 
 class App {
   public app: express.Application;
@@ -20,7 +21,7 @@ class App {
   private mongoSetup(): void {
     mongoose.Promise = global.Promise;
     mongoose
-      .connect(mongoUrl, { useNewUrlParser: true })
+      .connect(process.env.MONGO_URL, { useNewUrlParser: true })
       .then(() => console.log("Connected to MongoDB."))
       .catch(err => {
         throw err;
