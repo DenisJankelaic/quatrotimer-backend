@@ -75,7 +75,10 @@ var AuthenticationController = /** @class */ (function () {
     }
     AuthenticationController.prototype.createToken = function (user) {
         var expiresIn = 60 * 60; // an hour
-        var secret = process.env.SECRET;
+        var secret;
+        if (process.env.SECRET != null) {
+            secret = process.env.SECRET;
+        }
         var dataStoredInToken = {
             _id: user._id
         };

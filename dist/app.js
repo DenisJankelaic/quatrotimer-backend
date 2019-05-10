@@ -16,12 +16,14 @@ var App = /** @class */ (function () {
     }
     App.prototype.mongoSetup = function () {
         mongoose.Promise = global.Promise;
-        mongoose
-            .connect(process.env.MONGO_URL, { useNewUrlParser: true })
-            .then(function () { return console.log("Connected to MongoDB."); })
-            .catch(function (err) {
-            throw err;
-        });
+        if (process.env.MONGO_URL != null) {
+            mongoose
+                .connect(process.env.MONGO_URL, { useNewUrlParser: true })
+                .then(function () { return console.log("Connected to MongoDB."); })
+                .catch(function (err) {
+                throw err;
+            });
+        }
     };
     App.prototype.config = function () {
         this.app.use(cors());

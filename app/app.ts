@@ -20,12 +20,14 @@ class App {
 
   private mongoSetup(): void {
     mongoose.Promise = global.Promise;
-    mongoose
-      .connect(process.env.MONGO_URL, { useNewUrlParser: true })
-      .then(() => console.log("Connected to MongoDB."))
-      .catch(err => {
-        throw err;
-      });
+    if (process.env.MONGO_URL != null) {
+      mongoose
+        .connect(process.env.MONGO_URL, { useNewUrlParser: true })
+        .then(() => console.log("Connected to MongoDB."))
+        .catch(err => {
+          throw err;
+        });
+    }
   }
 
   private config(): void {
