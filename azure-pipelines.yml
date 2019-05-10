@@ -1,21 +1,30 @@
-# Node.js
-# Build a general Node.js project with npm.
-# Add steps that analyze code, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
-
-trigger:
-- master
-
+trigger: none
+pr: none
 pool:
-  vmImage: 'ubuntu-latest'
-
+    name: Virtual Server Hosted
 steps:
-- task: NodeTool@0
-  inputs:
-    versionSpec: '10.x'
-  displayName: 'Install Node.js'
-
-- script: |
-    npm install
-    npm run build
-  displayName: 'npm install and build'
+    - task: Docker@1
+      displayName: Build an image
+      inputs:
+          containerregistrytype: Container Registry
+          dockerRegistryEndpoint: Private Azure Registry
+          arguments: '--build-arg SECRET=$(SECRET) --build-arg MONGO_URL=$(MONGO_URL)'
+          imageName: $(IMAGE_NAME)
+    - task: Docker@1
+      displayName: Push an image
+      inputs:
+          containerregistrytype: Container Registry
+          dockerRegistryEndpoint: Private Azure Registry
+          command: Push an image
+          imageName: '$(IMAGE_NAME):latest'
+    - task: ManageKubernetes@1
+      inputs:
+          sshEndpoint: 'SSH to alan'
+          imageName: $(IMAGE_NAME)
+          containerPort: $(PORT)
+          host: alan.quatrodev.com
+          certificateSecretName: tls-certificate
+          imageRegistryUrl: $(IMAGE_REGISTRY_URL)
+          imageRegistrySecretName: $(IMAGE_REGISTRY_SECRET_NAME)
+          path: $(PUBLIC_PATH)
+          branchName: denis-backend
