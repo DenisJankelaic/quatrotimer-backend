@@ -96,6 +96,7 @@ export class Routes {
     app.route("/tasks/updateAll").put(this.tasksController.updateAllTasks);
     app.route("/tasks/:userId").get(this.tasksController.getTasks);
     app.route("/task/update").put(this.tasksController.updateTask);
+    app.route("/task/updateNewCurrent").put(this.tasksController.updateNewCurrent);
     app.route("/task/delete/:taskId").delete(this.tasksController.deleteTask);
     app
       .route("/")

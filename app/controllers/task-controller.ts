@@ -79,10 +79,11 @@ export class TasksController {
 
   public async updateAllTasks(req: Request, res: Response): Promise<void> {
     const { userId, taskId }: UpdateTaskList = req.query;
+
     console.log(userId, taskId);
 
-    Task.find(
-      { userId: userId},
+    Task.updateMany(
+      { userId: userId, taskId: { $ne: taskId } },
       {
         $set: {
           isCurrent: false
@@ -93,6 +94,26 @@ export class TasksController {
           res.send(err);
         } else {
           res.json(task);
+        }
+      }
+    );
+  }
+
+  public async updateNewCurrent(req: Request, res: Response): Promise<void> {
+    const { userId, taskId }: UpdateTaskList = req.query;
+    console.log("update new current", userId, taskId);
+    Task.findOneAndUpdate(
+      { userId: userId, taskId: taskId },
+      {
+        $set: {
+          isCurrent: true
+        }
+      },
+      (err, task) => {
+        if (err) {
+          res.send(err);
+        } else {
+          res.status(200).json(task);
         }
       }
     );

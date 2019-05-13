@@ -59,7 +59,7 @@ export class ProjectsController {
 
   public updateProject(req: Request, res: Response): void {
     const newlyUpdatedProject: UpdateProject = req.body;
-    console.log("im here lol");
+
     Project.findOneAndUpdate(
       { _id: newlyUpdatedProject._id },
       {

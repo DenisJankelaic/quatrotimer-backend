@@ -101,7 +101,7 @@ var TasksController = /** @class */ (function () {
             return __generator(this, function (_b) {
                 _a = req.query, userId = _a.userId, taskId = _a.taskId;
                 console.log(userId, taskId);
-                Task.find({ userId: userId }, {
+                Task.updateMany({ userId: userId, taskId: { $ne: taskId } }, {
                     $set: {
                         isCurrent: false
                     }
@@ -111,6 +111,28 @@ var TasksController = /** @class */ (function () {
                     }
                     else {
                         res.json(task);
+                    }
+                });
+                return [2 /*return*/];
+            });
+        });
+    };
+    TasksController.prototype.updateNewCurrent = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _a, userId, taskId;
+            return __generator(this, function (_b) {
+                _a = req.query, userId = _a.userId, taskId = _a.taskId;
+                console.log("update new current", userId, taskId);
+                Task.findOneAndUpdate({ userId: userId, taskId: taskId }, {
+                    $set: {
+                        isCurrent: true
+                    }
+                }, function (err, task) {
+                    if (err) {
+                        res.send(err);
+                    }
+                    else {
+                        res.status(200).json(task);
                     }
                 });
                 return [2 /*return*/];

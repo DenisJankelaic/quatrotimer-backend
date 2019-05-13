@@ -59,7 +59,6 @@ var ProjectsController = /** @class */ (function () {
     };
     ProjectsController.prototype.updateProject = function (req, res) {
         var newlyUpdatedProject = req.body;
-        console.log("im here lol");
         Project.findOneAndUpdate({ _id: newlyUpdatedProject._id }, {
             $set: {
                 projectName: newlyUpdatedProject.projectName,
