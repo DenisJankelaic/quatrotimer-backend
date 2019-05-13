@@ -39,7 +39,7 @@ export class AuthenticationController {
   };
 
   private createToken(user: UpdateUser): TokenData {
-    const expiresIn = 60 * 60; // an hour
+    const expiresIn = 60 * 120; // an hour
     let secret;
     if (process.env.SECRET != null) {
       secret = process.env.SECRET;
