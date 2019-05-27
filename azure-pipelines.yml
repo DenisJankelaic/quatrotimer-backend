@@ -7,14 +7,14 @@ steps:
       displayName: Build an image
       inputs:
           containerregistrytype: Container Registry
-          dockerRegistryEndpoint: Private Azure Registry
+          dockerRegistryEndpoint: Private Image Registry
           arguments: '--build-arg SECRET=$(SECRET) --build-arg MONGO_URL=$(MONGO_URL)'
           imageName: $(IMAGE_NAME)
     - task: Docker@1
       displayName: Push an image
       inputs:
           containerregistrytype: Container Registry
-          dockerRegistryEndpoint: Private Azure Registry
+          dockerRegistryEndpoint: Private Image Registry
           command: Push an image
           imageName: '$(IMAGE_NAME):latest'
     - task: ManageKubernetes@1
