@@ -16,9 +16,10 @@ var App = /** @class */ (function () {
     }
     App.prototype.mongoSetup = function () {
         mongoose.Promise = global.Promise;
-        if (process.env.MONGO_URL != null) {
+        if ("mongodb+srv://<d3nziss@gmail.com>:<mongodbpass123>@quatrotimerdb-t5dyd.mongodb.net/test?retryWrites=true&w=majority" !=
+            null) {
             mongoose
-                .connect(process.env.MONGO_URL, { useNewUrlParser: true })
+                .connect("mongodb+srv://<d3nziss@gmail.com>:<mongodbpass123>@quatrotimerdb-t5dyd.mongodb.net/test?retryWrites=true&w=majority", { useNewUrlParser: true, useUnifiedTopology: true })
                 .then(function () { return console.log("Connected to MongoDB."); })
                 .catch(function (err) {
                 throw err;

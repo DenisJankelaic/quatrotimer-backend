@@ -74,7 +74,7 @@ var AuthenticationController = /** @class */ (function () {
         }); };
     }
     AuthenticationController.prototype.createToken = function (user) {
-        var expiresIn = 60 * 60; // an hour
+        var expiresIn = 60 * 120; // an hour
         var secret;
         if (process.env.SECRET != null) {
             secret = process.env.SECRET;
