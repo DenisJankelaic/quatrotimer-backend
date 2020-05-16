@@ -6,6 +6,7 @@ import * as cors from "cors";
 require("dotenv").config();
 
 import { Routes } from "./routes/routes";
+import { mongoUrl } from "./shared/db-url";
 
 class App {
   public app: express.Application;
@@ -21,10 +22,7 @@ class App {
   private mongoSetup(): void {
     mongoose.Promise = global.Promise;
     mongoose
-      .connect(
-        "mongodb+srv://admin:admin@quatrotimerdb-t5dyd.mongodb.net/test?retryWrites=true&w=majority",
-        { useNewUrlParser: true, useUnifiedTopology: true }
-      )
+      .connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true })
       .then(() => console.log("Connected to MongoDB."))
       .catch((err) => {
         throw err;

@@ -6,6 +6,7 @@ var mongoose = require("mongoose");
 var cors = require("cors");
 require("dotenv").config();
 var routes_1 = require("./routes/routes");
+var db_url_1 = require("./shared/db-url");
 var App = /** @class */ (function () {
     function App() {
         this.routePrv = new routes_1.Routes();
@@ -16,15 +17,12 @@ var App = /** @class */ (function () {
     }
     App.prototype.mongoSetup = function () {
         mongoose.Promise = global.Promise;
-        if ("mongodb+srv://<d3nziss@gmail.com>:<mongodbpass123>@quatrotimerdb-t5dyd.mongodb.net/test?retryWrites=true&w=majority" !=
-            null) {
-            mongoose
-                .connect("mongodb+srv://<d3nziss@gmail.com>:<mongodbpass123>@quatrotimerdb-t5dyd.mongodb.net/test?retryWrites=true&w=majority", { useNewUrlParser: true, useUnifiedTopology: true })
-                .then(function () { return console.log("Connected to MongoDB."); })
-                .catch(function (err) {
-                throw err;
-            });
-        }
+        mongoose
+            .connect(db_url_1.mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true })
+            .then(function () { return console.log("Connected to MongoDB."); })
+            .catch(function (err) {
+            throw err;
+        });
     };
     App.prototype.config = function () {
         this.app.use(cors());

@@ -22,6 +22,7 @@ export class AuthenticationController {
 
     const user = await User.findOne({ login: logInData.login });
 
+    console.log(logInData);
     console.log(user);
 
     if (user) {

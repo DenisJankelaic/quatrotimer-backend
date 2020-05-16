@@ -3,7 +3,7 @@ import * as bcrypt from "bcrypt";
 import { Request, Response } from "express";
 
 import { UserSchema } from "../models/user-data-model";
-import { UpdateUser } from "../shared/contracts";
+import { UpdateUser, UpdateUserInfo } from "../shared/contracts";
 import { TaskSchema } from "../models/task-data-model";
 import { ProjectSchema } from "../models/project-data-model";
 
@@ -34,15 +34,22 @@ export class UsersController {
 
   public async addNewUser(req: Request, res: Response): Promise<void> {
     const bodyParams = new User(req.body);
-    const hashedPassword = await bcrypt.hash(bodyParams.password, 10);
-    bodyParams.password = hashedPassword;
-    bodyParams.save((err, user) => {
-      if (err) {
-        res.send(err);
-      } else {
-        res.json(user);
-      }
-    });
+
+    const user = await User.findOne({ login: bodyParams.login });
+
+    if (user != null) {
+      res.status(400).send("User with this login already exists.");
+    } else {
+      const hashedPassword = await bcrypt.hash(bodyParams.password, 10);
+      bodyParams.password = hashedPassword;
+      bodyParams.save((err, user) => {
+        if (err) {
+          res.send(err);
+        } else {
+          res.json(user);
+        }
+      });
+    }
   }
 
   public deleteUser(req: Request, res: Response): void {
@@ -54,7 +61,7 @@ export class UsersController {
           if (err) {
             res.send(err);
           } else {
-            res.status(200).json({ message: "Task deleted" });
+            res.status(200).json({ message: "User deleted" });
           }
         });
       }
@@ -63,16 +70,26 @@ export class UsersController {
 
   public async updateUser(req: Request, res: Response): Promise<void> {
     const { _id, login, password, role, userName }: UpdateUser = req.body;
-    const hashedPassword = await bcrypt.hash(password, 10);
+    let userInfoToUpdate: UpdateUserInfo = {
+      login: login,
+      role: role,
+      userName: userName,
+    };
+
+    if (password !== "") {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      userInfoToUpdate = {
+        login: login,
+        role: role,
+        userName: userName,
+        password: hashedPassword,
+      };
+    }
+
     User.findOneAndUpdate(
       { _id: _id },
       {
-        $set: {
-          login: login,
-          role: role,
-          password: hashedPassword,
-          userName: userName
-        }
+        $set: { ...userInfoToUpdate },
       },
       { new: true },
       (err, user) => {
