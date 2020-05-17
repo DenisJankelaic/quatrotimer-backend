@@ -76,29 +76,35 @@ export class UsersController {
       userName: userName,
     };
 
-    if (password !== "") {
-      const hashedPassword = await bcrypt.hash(password, 10);
-      userInfoToUpdate = {
-        login: login,
-        role: role,
-        userName: userName,
-        password: hashedPassword,
-      };
-    }
+    const user = await User.findOne({ login: userInfoToUpdate.login });
 
-    User.findOneAndUpdate(
-      { _id: _id },
-      {
-        $set: { ...userInfoToUpdate },
-      },
-      { new: true },
-      (err, user) => {
-        if (err) {
-          res.send(err);
-        } else {
-          res.json(user);
-        }
+    if (user != null && user._id !== _id) {
+      res.status(400).send("User with this login already exists.");
+    } else {
+      if (password !== "") {
+        const hashedPassword = await bcrypt.hash(password, 10);
+        userInfoToUpdate = {
+          login: login,
+          role: role,
+          userName: userName,
+          password: hashedPassword,
+        };
       }
-    );
+
+      User.findOneAndUpdate(
+        { _id: _id },
+        {
+          $set: { ...userInfoToUpdate },
+        },
+        { new: true },
+        (err, user) => {
+          if (err) {
+            res.send(err);
+          } else {
+            res.json(user);
+          }
+        }
+      );
+    }
   }
 }

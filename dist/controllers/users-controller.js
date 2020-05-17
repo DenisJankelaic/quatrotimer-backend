@@ -119,7 +119,7 @@ var UsersController = /** @class */ (function () {
                         res.send(err);
                     }
                     else {
-                        res.status(200).json({ message: "Task deleted" });
+                        res.status(200).json({ message: "User deleted" });
                     }
                 });
             }
@@ -127,7 +127,7 @@ var UsersController = /** @class */ (function () {
     };
     UsersController.prototype.updateUser = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, _id, login, password, role, userName, userInfoToUpdate, hashedPassword;
+            var _a, _id, login, password, role, userName, userInfoToUpdate, user, hashedPassword;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -137,9 +137,18 @@ var UsersController = /** @class */ (function () {
                             role: role,
                             userName: userName,
                         };
-                        if (!(password !== "")) return [3 /*break*/, 2];
-                        return [4 /*yield*/, bcrypt.hash(password, 10)];
+                        return [4 /*yield*/, User.findOne({ login: userInfoToUpdate.login })];
                     case 1:
+                        user = _b.sent();
+                        console.log("user", user);
+                        console.log("user to Update", userInfoToUpdate);
+                        if (!(user != null && user._id !== _id)) return [3 /*break*/, 2];
+                        res.status(400).send("User with this login already exists.");
+                        return [3 /*break*/, 5];
+                    case 2:
+                        if (!(password !== "")) return [3 /*break*/, 4];
+                        return [4 /*yield*/, bcrypt.hash(password, 10)];
+                    case 3:
                         hashedPassword = _b.sent();
                         userInfoToUpdate = {
                             login: login,
@@ -147,8 +156,8 @@ var UsersController = /** @class */ (function () {
                             userName: userName,
                             password: hashedPassword,
                         };
-                        _b.label = 2;
-                    case 2:
+                        _b.label = 4;
+                    case 4:
                         User.findOneAndUpdate({ _id: _id }, {
                             $set: __assign({}, userInfoToUpdate),
                         }, { new: true }, function (err, user) {
@@ -159,7 +168,8 @@ var UsersController = /** @class */ (function () {
                                 res.json(user);
                             }
                         });
-                        return [2 /*return*/];
+                        _b.label = 5;
+                    case 5: return [2 /*return*/];
                 }
             });
         });
