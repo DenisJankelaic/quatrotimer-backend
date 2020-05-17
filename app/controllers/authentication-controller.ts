@@ -8,7 +8,7 @@ import {
   LoginDto,
   TokenData,
   UpdateUser,
-  DataStoredInToken
+  DataStoredInToken,
 } from "../shared/contracts";
 
 const User = mongoose.model("users", UserSchema);
@@ -21,6 +21,10 @@ export class AuthenticationController {
     const logInData: LoginDto = request.body;
 
     const user = await User.findOne({ login: logInData.login });
+
+    console.log(logInData);
+    console.log(user);
+
     if (user) {
       const isPasswordMatching = await bcrypt.compare(
         logInData.password,
@@ -40,23 +44,21 @@ export class AuthenticationController {
 
   private createToken(user: UpdateUser): TokenData {
     const expiresIn = 60 * 120; // an hour
-    let secret;
-    if (process.env.SECRET != null) {
-      secret = process.env.SECRET;
-    }
+    // let secret;
+    // if (process.env.SECRET != null) {
+    //   secret = process.env.SECRET;
+    // }
     const dataStoredInToken: DataStoredInToken = {
-      _id: user._id
+      _id: user._id,
     };
     return {
       expiresIn,
-      token: jwt.sign(dataStoredInToken, secret, { expiresIn }),
-      userId: user._id
+      token: jwt.sign(dataStoredInToken, "0123456789", { expiresIn }),
+      userId: user._id,
     };
   }
 
   private createCookie(tokenData: TokenData) {
-    return `Authorization=${tokenData.token}; HttpOnly; Max-Age=${
-      tokenData.expiresIn
-    }`;
+    return `Authorization=${tokenData.token}; HttpOnly; Max-Age=${tokenData.expiresIn}`;
   }
 }

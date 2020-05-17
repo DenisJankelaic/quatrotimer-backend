@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -68,13 +79,19 @@ var UsersController = /** @class */ (function () {
     };
     UsersController.prototype.addNewUser = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var bodyParams, hashedPassword;
+            var bodyParams, user, hashedPassword;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         bodyParams = new User(req.body);
-                        return [4 /*yield*/, bcrypt.hash(bodyParams.password, 10)];
+                        return [4 /*yield*/, User.findOne({ login: bodyParams.login })];
                     case 1:
+                        user = _a.sent();
+                        if (!(user != null)) return [3 /*break*/, 2];
+                        res.status(400).send("User with this login already exists.");
+                        return [3 /*break*/, 4];
+                    case 2: return [4 /*yield*/, bcrypt.hash(bodyParams.password, 10)];
+                    case 3:
                         hashedPassword = _a.sent();
                         bodyParams.password = hashedPassword;
                         bodyParams.save(function (err, user) {
@@ -85,7 +102,8 @@ var UsersController = /** @class */ (function () {
                                 res.json(user);
                             }
                         });
-                        return [2 /*return*/];
+                        _a.label = 4;
+                    case 4: return [2 /*return*/];
                 }
             });
         });
@@ -101,7 +119,7 @@ var UsersController = /** @class */ (function () {
                         res.send(err);
                     }
                     else {
-                        res.status(200).json({ message: "Task deleted" });
+                        res.status(200).json({ message: "User deleted" });
                     }
                 });
             }
@@ -109,21 +127,37 @@ var UsersController = /** @class */ (function () {
     };
     UsersController.prototype.updateUser = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, _id, login, password, role, userName, hashedPassword;
+            var _a, _id, login, password, role, userName, userInfoToUpdate, user, hashedPassword;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
                         _a = req.body, _id = _a._id, login = _a.login, password = _a.password, role = _a.role, userName = _a.userName;
-                        return [4 /*yield*/, bcrypt.hash(password, 10)];
+                        userInfoToUpdate = {
+                            login: login,
+                            role: role,
+                            userName: userName,
+                        };
+                        return [4 /*yield*/, User.findOne({ login: userInfoToUpdate.login })];
                     case 1:
+                        user = _b.sent();
+                        if (!(user != null && user._id !== _id)) return [3 /*break*/, 2];
+                        res.status(400).send("User with this login already exists.");
+                        return [3 /*break*/, 5];
+                    case 2:
+                        if (!(password !== "")) return [3 /*break*/, 4];
+                        return [4 /*yield*/, bcrypt.hash(password, 10)];
+                    case 3:
                         hashedPassword = _b.sent();
+                        userInfoToUpdate = {
+                            login: login,
+                            role: role,
+                            userName: userName,
+                            password: hashedPassword,
+                        };
+                        _b.label = 4;
+                    case 4:
                         User.findOneAndUpdate({ _id: _id }, {
-                            $set: {
-                                login: login,
-                                role: role,
-                                password: hashedPassword,
-                                userName: userName
-                            }
+                            $set: __assign({}, userInfoToUpdate),
                         }, { new: true }, function (err, user) {
                             if (err) {
                                 res.send(err);
@@ -132,7 +166,8 @@ var UsersController = /** @class */ (function () {
                                 res.json(user);
                             }
                         });
-                        return [2 /*return*/];
+                        _b.label = 5;
+                    case 5: return [2 /*return*/];
                 }
             });
         });

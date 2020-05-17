@@ -52,6 +52,8 @@ var AuthenticationController = /** @class */ (function () {
                         return [4 /*yield*/, User.findOne({ login: logInData.login })];
                     case 1:
                         user = _a.sent();
+                        console.log(logInData);
+                        console.log(user);
                         if (!user) return [3 /*break*/, 3];
                         return [4 /*yield*/, bcrypt.compare(logInData.password, user.password)];
                     case 2:
@@ -74,18 +76,18 @@ var AuthenticationController = /** @class */ (function () {
         }); };
     }
     AuthenticationController.prototype.createToken = function (user) {
-        var expiresIn = 60 * 60; // an hour
-        var secret;
-        if (process.env.SECRET != null) {
-            secret = process.env.SECRET;
-        }
+        var expiresIn = 60 * 120; // an hour
+        // let secret;
+        // if (process.env.SECRET != null) {
+        //   secret = process.env.SECRET;
+        // }
         var dataStoredInToken = {
-            _id: user._id
+            _id: user._id,
         };
         return {
             expiresIn: expiresIn,
-            token: jwt.sign(dataStoredInToken, secret, { expiresIn: expiresIn }),
-            userId: user._id
+            token: jwt.sign(dataStoredInToken, "0123456789", { expiresIn: expiresIn }),
+            userId: user._id,
         };
     };
     AuthenticationController.prototype.createCookie = function (tokenData) {
