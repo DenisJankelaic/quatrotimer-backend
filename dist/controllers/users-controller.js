@@ -140,8 +140,6 @@ var UsersController = /** @class */ (function () {
                         return [4 /*yield*/, User.findOne({ login: userInfoToUpdate.login })];
                     case 1:
                         user = _b.sent();
-                        console.log("user", user);
-                        console.log("user to Update", userInfoToUpdate);
                         if (!(user != null && user._id !== _id)) return [3 /*break*/, 2];
                         res.status(400).send("User with this login already exists.");
                         return [3 /*break*/, 5];
